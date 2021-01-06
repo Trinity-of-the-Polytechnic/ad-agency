@@ -44,7 +44,7 @@ ALTER TABLE Client ADD CONSTRAINT Unique_Identifier3 PRIMARY KEY (id_client)
 CREATE TABLE Post
 (
   id_post Bigserial NOT NULL,
-  title Text NOT NULL
+  title Text NOT NULL UNIQUE
 )
 WITH (autovacuum_enabled=true)
 ;
