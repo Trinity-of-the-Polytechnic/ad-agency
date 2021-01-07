@@ -1,11 +1,11 @@
-INSERT INTO post(title) VALUES
+INSERT INTO Post(title) VALUES
     ('Креативный директор'),
     ('Руководитель проектов'),
     ('Аккаунт-менеджер'),
     ('Дизайнер')
 ;
 
-INSERT INTO priority(level, title) VALUES
+INSERT INTO Priority(level, title) VALUES
     (-1, 'сделать еще вчера'),
     (0, 'максимальный'),
     (1, 'высокий'),
@@ -14,14 +14,14 @@ INSERT INTO priority(level, title) VALUES
     (4, 'минимальный')
 ;
 
-INSERT INTO status(title) VALUES
+INSERT INTO Status(title) VALUES
     ('Неактивна'),
     ('Активна'),
     ('Приостановлена'),
     ('Выполнена')
 ;
 
-INSERT INTO type_of_doc(title_of_type) VALUES
+INSERT INTO Doc_Type(type_title) VALUES
     ('Документ'),
     ('Отчет о проделанной работе'),
     ('Договор')
