@@ -1,15 +1,13 @@
-CREATE OR REPLACE FUNCTION add_company
-(
+CREATE OR REPLACE FUNCTION add_company (
     _title_company Text,
     _address Text DEFAULT NULL,
     _ogrn Text DEFAULT NULL,
     _inn Text DEFAULT NULL,
     _bank_details Text DEFAULT NULL,
     _telephone Text DEFAULT NULL
-)
-RETURNS company.id_company%type AS $$
+) RETURNS Company.id_company%type AS $$
 DECLARE
-    id_new_company company.id_company%type;
+    id_new_company Company.id_company%type;
 BEGIN
     INSERT INTO
         company(title_company, address, ogrn, inn, bank_details, telephone)
@@ -22,6 +20,28 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION add_client (
+    _last_name Text,
+    _name Text,
+    _id_company Bigint,
+    _patronymic Text default NULL,
+    _phone Text default NULL,
+    _email Text default NULL
+) RETURNS Client.id_client%type AS $$
+DECLARE
+    id_new_client Client.id_client%type;
+BEGIN
+    INSERT INTO
+        client(last_name, name, id_company, patronymic, phone, email)
+    VALUES
+        (_last_name, _name, _id_company, _patronymic, _phone, _email)
+    RETURNING
+        id_client INTO id_new_client;
+    
+    RETURN id_new_company;
+END;
+$$ LANGUAGE plpgsql;
 
 
 --
