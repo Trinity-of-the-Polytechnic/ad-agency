@@ -64,11 +64,11 @@ ALTER TABLE Company ADD CONSTRAINT Unique_Identifier5 PRIMARY KEY (id_company);
 CREATE TABLE Document (
   id_document Bigserial NOT NULL,
   number Text NOT NULL,
-  creation_date Date,
   id_doc_type Bigint NOT NULL,
+  creation_date Date,
   id_project Bigint,
-  id_employee Bigint,
-  id_order Bigint
+  id_order Bigint,
+  id_employee Bigint
 )
 WITH (autovacuum_enabled=true);
 
@@ -115,10 +115,10 @@ ALTER TABLE Doc_Type ADD CONSTRAINT Unique_Identifier13 PRIMARY KEY (id_doc_type
 
 CREATE TABLE Project (
   id_project Bigserial NOT NULL,
-  technical_specification Text,
   id_order Bigint NOT NULL,
   id_project_manager Bigint NOT NULL,
-  id_creative_director Bigint NOT NULL
+  id_creative_director Bigint NOT NULL,
+  technical_specification Text
 )
 WITH (autovacuum_enabled=true);
 

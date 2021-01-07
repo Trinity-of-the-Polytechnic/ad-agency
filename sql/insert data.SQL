@@ -5,6 +5,7 @@ INSERT INTO Post(title) VALUES
     ('Дизайнер')
 ;
 
+
 INSERT INTO Priority(level, title) VALUES
     (-1, 'сделать еще вчера'),
     (0, 'максимальный'),
@@ -14,6 +15,7 @@ INSERT INTO Priority(level, title) VALUES
     (4, 'минимальный')
 ;
 
+
 INSERT INTO Status(title) VALUES
     ('Неактивна'),
     ('Активна'),
@@ -21,8 +23,12 @@ INSERT INTO Status(title) VALUES
     ('Выполнена')
 ;
 
+
 INSERT INTO Doc_Type(type_title) VALUES
     ('Документ'),
     ('Отчет о проделанной работе'),
-    ('Договор')
+    ('Договор'),
+    ('Правки'),
+    ('Назначение сотрудников на проект'),
+    ('Снятие сотрудников с проекта')
 ;
