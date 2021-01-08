@@ -4,9 +4,9 @@ CREATE TABLE Employee (
   id_employee Bigserial NOT NULL,
   last_name Text NOT NULL,
   name Text NOT NULL,
+  id_post Bigint NOT NULL,
   patronymic Text,
-  birthday Date,
-  id_post Bigint NOT NULL
+  birthday Date
 )
 WITH (autovacuum_enabled=true);
 
