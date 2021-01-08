@@ -47,3 +47,137 @@ INSERT INTO Employee(last_name, name, patronymic, id_post, birthday) VALUES
     ('Дмитриев', 'Максим', 'Евгеньевич', (select id_post from Post where title = 'Дизайнер'), '1993-03-03'),
     ('Смолина', 'Нататлья', 'Павловна', (select id_post from Post where title = 'Дизайнер'), '1991-10-11')
 ;
+
+-- Компании
+
+INSERT INTO Company(title_company) VALUES
+    ('Эвалар'),
+    ('Алтай-кокс'),
+    ('Алтайский лён'),
+    ('Деметра-Сибирь'),
+    ('Каменский рыбозавод'),
+    ('Алтайский трактор')
+;
+
+--Клиенты
+
+INSERT INTO Client(last_name, name, patronymic, id_company, phone) VALUES
+    ('Берёзкин', 'Александр', 'Родионович', (select id_company from Company where title_company = 'Эвалар'), '79998761221'),
+    ('Килина', 'Регина', 'Антиповна', (select id_company from Company where title_company = 'Эвалар'), '79998761221'),
+    ('Кулигина', 'Софья', 'Артуровна', (select id_company from Company where title_company = 'Эвалар'), '79998761221'),
+    ('Бальсунова', 'Анна', 'Платоновна', (select id_company from Company where title_company = 'Эвалар'), '79998761221'),
+    ('Майсак', 'Ангелина', 'Несторовна', (select id_company from Company where title_company = 'Эвалар'), '79998761221'),
+    ('Домаша', 'Антонина', 'Феодосьевна', (select id_company from Company where title_company = 'Эвалар'), '79998761221'),
+    ('Толбаев', 'Герасим', 'Мартьянович', (select id_company from Company where title_company = 'Алтай-кокс'), '79998761221'),
+    ('Овсов', 'Игнат', 'Мечиславович', (select id_company from Company where title_company = 'Алтай-кокс'), '79998761221'),
+    ('Мутовина', 'Екатерина', 'Юрьевна', (select id_company from Company where title_company = 'Алтай-кокс'), '79998761221'),
+    ('Трапезников', 'Даниил', 'Проклович', (select id_company from Company where title_company = 'Алтайский лён'), '79998761221'),
+    ('Делова', 'Розалия', 'Георгиевна', (select id_company from Company where title_company = 'Алтайский лён'), '79998761221'),
+    ('Юрков', 'Юлий', 'Валерьянович', (select id_company from Company where title_company = 'Деметра-Сибирь'), '79998761221'),
+    ('Кутырёв', 'Кондрат', 'Вадимович', (select id_company from Company where title_company = 'Деметра-Сибирь'), '79998761221'),
+    ('Королёв', 'Всеслав', 'Епифанович', (select id_company from Company where title_company = 'Деметра-Сибирь'), '79998761221'),
+    ('Низовцев', 'Вадим', 'Валериевич', (select id_company from Company where title_company = 'Деметра-Сибирь'), '79998761221'),
+    ('Пименова', 'Владислава', 'Елизаровна', (select id_company from Company where title_company = 'Деметра-Сибирь'), '79998761221'),
+    ('Ямков', 'Порфирий', 'Натанович', (select id_company from Company where title_company = 'Каменский рыбозавод'), '79998761221'),
+    ('Карчагин', 'Егор', 'Елисеевич', (select id_company from Company where title_company = 'Алтайский трактор'), '79998761221'),
+    ('Сутулин', 'Самуил', 'Геннадиевич', (select id_company from Company where title_company = 'Алтайский трактор'), '79998761221')
+;
+
+-- Заказы
+INSERT INTO Customer_Order(id_client, id_account_manager, project_description) VALUES
+    (
+        (select id_client from Client where client.last_name = 'Берёзкин' and client.name = 'Александр' and client.patronymic = 'Родионович'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Евгений' and patronymic = 'Аркадьевич'),
+        'Описание заказа1'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Килина' and client.name = 'Регина' and client.patronymic = 'Антиповна'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Евгений' and patronymic = 'Аркадьевич'),
+        'Описание заказа2'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Кулигина' and client.name = 'Софья' and client.patronymic = 'Артуровна'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Евгений' and patronymic = 'Аркадьевич'),
+        'Описание заказа3'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Бальсунова' and client.name = 'Анна' and client.patronymic = 'Платоновна'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Евгений' and patronymic = 'Аркадьевич'),
+        'Описание заказа4'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Майсак' and client.name = 'Ангелина' and client.patronymic = 'Несторовна'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Евгений' and patronymic = 'Аркадьевич'),
+        'Описание заказа5'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Домаша' and client.name = 'Антонина' and client.patronymic = 'Феодосьевна'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Евгений' and patronymic = 'Аркадьевич'),
+        'Описание заказа6'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Толбаев' and client.name = 'Герасим' and client.patronymic = 'Мартьянович'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Евгений' and patronymic = 'Аркадьевич'),
+        'Описание заказа7'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Овсов' and client.name = 'Игнат' and client.patronymic = 'Мечиславович'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Евгений' and patronymic = 'Аркадьевич'),
+        'Описание заказа8'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Мутовина' and client.name = 'Екатерина' and client.patronymic = 'Юрьевна'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Евгений' and patronymic = 'Аркадьевич'),
+        'Описание заказа9'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Трапезников' and client.name = 'Даниил' and client.patronymic = 'Проклович'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Татьяна' and patronymic = 'Максимовна'),
+        'Описание заказа10'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Делова' and client.name = 'Розалия' and client.patronymic = 'Георгиевна'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Татьяна' and patronymic = 'Максимовна'),
+        'Описание заказа11'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Юрков' and client.name = 'Юлий' and client.patronymic = 'Валерьянович'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Татьяна' and patronymic = 'Максимовна'),
+        'Описание заказа12'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Кутырёв' and client.name = 'Кондрат' and client.patronymic = 'Вадимович'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Татьяна' and patronymic = 'Максимовна'),
+        'Описание заказа13'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Королёв' and client.name = 'Всеслав' and client.patronymic = 'Епифанович'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Татьяна' and patronymic = 'Максимовна'),
+        'Описание заказа14'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Низовцев' and client.name = 'Вадим' and client.patronymic = 'Валериевич'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Татьяна' and patronymic = 'Максимовна'),
+        'Описание заказа15'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Пименова' and client.name = 'Владислава' and client.patronymic = 'Елизаровна'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Татьяна' and patronymic = 'Максимовна'),
+        'Описание заказа16'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Ямков' and client.name = 'Порфирий' and client.patronymic = 'Натанович'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Татьяна' and patronymic = 'Максимовна'),
+        'Описание заказа17'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Карчагин' and client.name = 'Егор' and client.patronymic = 'Елисеевич'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Татьяна' and patronymic = 'Максимовна'),
+        'Описание заказа18'
+    ),
+    (
+        (select id_client from Client where client.last_name = 'Сутулин' and client.name = 'Самуил' and client.patronymic = 'Геннадиевич'), 
+        (select id_employee from Employee where last_name = 'Борисенко' and name = 'Татьяна' and patronymic = 'Максимовна'),
+        'Описание заказа19'
+    )
+;
