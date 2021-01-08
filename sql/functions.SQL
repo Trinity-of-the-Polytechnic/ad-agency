@@ -62,14 +62,13 @@ CREATE OR REPLACE FUNCTION add_work_report (
 )
 RETURNS Document.id_document%type AS $$
 DECLARE
-    report_type constant Doc_Type.type_title%type := 'Отчет о проделанной работе';
-    project_manager_post constant Post.title%type := 'Руководитель проектов';
+    doc_type_title constant Doc_Type.type_title%type := 'Отчет о проделанной работе';
+    employee_post constant Post.title%type := 'Руководитель проектов';
 
-    id_new_report Document.id_document%type;
     id_cur_doc_type Document.id_doc_type%type := (
         SELECT id_doc_type
         FROM Doc_Type
-        WHERE type_title = report_type
+        WHERE type_title = doc_type_title
     );
     id_cur_project Document.id_project%type := (
         SELECT id_project
@@ -81,22 +80,17 @@ DECLARE
         FROM Project
         WHERE id_project = id_cur_project
     );
-
-    id bigint;
-    somestr text;
+    
+    id_new_report Document.id_document%type;
 BEGIN
-    ASSERT id_cur_doc_type is not NULL, 'assert ' || id_cur_doc_type;
+    ASSERT id_cur_doc_type is not NULL, 'Doc type does not exist: ' || doc_type_title;
 
-    if project_manager_post IS DISTINCT FROM (
-        select title
-        from Post
-        where id_post = (
-            select id_post
-            from Employee
-            where id_employee = _id_project_manager
-        )
+    if employee_post IS DISTINCT FROM (
+        select Post.title
+        from Post join Employee on Post.id_post = Employee.id_post
+        where Employee.id_employee = _id_project_manager
     ) then
-        raise 'post must be equal "%"', project_manager_post;
+        raise 'post must be equal "%"', employee_post;
     end if;
 
     INSERT INTO
@@ -110,6 +104,37 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+
+CREATE OR REPLACE FUNCTION add_contract (
+    _number Document.number%type,
+    _id_creative_director Document.id_employee%type,
+    _id_order Document.id_order%type
+)
+RETURNS Document.id_document%type AS $$
+DECLARE
+    doc_type_title constant Doc_Type.type_title%type := 'Договор';
+    employee_post constant Post.title%type := 'Креативный директор';
+
+    id_cur_doc_type Document.id_doc_type%type := (
+        SELECT id_doc_type
+        FROM Doc_Type
+        WHERE type_title = doc_type_title
+    );
+
+    id_new_report Document.id_document%type;
+BEGIN
+    ASSERT id_cur_doc_type is not NULL, 'Doc type does not exist: ' || doc_type_title;
+
+    INSERT INTO
+        Document(number, id_doc_type, id_order, id_employee)
+    VALUES
+        (_number, id_cur_doc_type, _id_order, _id_creative_director)
+    RETURNING
+        id_document INTO id_new_report;
+    
+    RETURN id_new_report;
+END;
+$$ LANGUAGE plpgsql;
 
 
 
