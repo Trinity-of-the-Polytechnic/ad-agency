@@ -181,3 +181,139 @@ INSERT INTO Customer_Order(id_client, id_account_manager, project_description) V
         'Описание заказа19'
     )
 ;
+
+CREATE TABLE Project (
+  id_project Bigserial NOT NULL,
+  id_order Bigint NOT NULL,
+  id_project_manager Bigint NOT NULL,
+  id_creative_director Bigint NOT NULL,
+  technical_specification Text
+)
+INSERT INTO Project(id_order, id_project_manager, id_creative_director, technical_specification) VALUES
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа1'),
+        (select id_employee from Employee where last_name = 'Адреев' and name = 'Прохор' and patronymic = 'Ярославович'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание1'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа2'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание2'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа3'),
+        (select id_employee from Employee where last_name = 'Адреев' and name = 'Прохор' and patronymic = 'Ярославович'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание3'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа4'),
+        (select id_employee from Employee where last_name = 'Адреев' and name = 'Прохор' and patronymic = 'Ярославович'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание4'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа5'),
+        (select id_employee from Employee where last_name = 'Адреев' and name = 'Прохор' and patronymic = 'Ярославович'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание5'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа6'),
+        (select id_employee from Employee where last_name = 'Адреев' and name = 'Прохор' and patronymic = 'Ярославович'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание6'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа7'),
+        (select id_employee from Employee where last_name = 'Адреев' and name = 'Прохор' and patronymic = 'Ярославович'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание7'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа8'),
+        (select id_employee from Employee where last_name = 'Адреев' and name = 'Прохор' and patronymic = 'Ярославович'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание8'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа9'),
+        (select id_employee from Employee where last_name = 'Адреев' and name = 'Прохор' and patronymic = 'Ярославович'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание9'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа10'),
+        (select id_employee from Employee where last_name = 'Адреев' and name = 'Прохор' and patronymic = 'Ярославович'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание10'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа2'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание11'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа10'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание12'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа11'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание13'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа12'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание14'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа13'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание15'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа14'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание16'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа15'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание17'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа16'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание18'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа17'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание19'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа18'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание20'
+    ),
+    (
+        (select id_order from Customer_Order where project_description = 'Описание заказа19'),
+        (select id_employee from Employee where last_name = 'Беспалова' and name = 'Любовь' and patronymic = 'Адреевна'),
+        (select id_employee from Employee where last_name = 'Гусева' and name = 'Александра' and patronymic = 'Олеговна'),        
+        'Техническое задание21'
+    )
+;
