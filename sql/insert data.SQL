@@ -182,13 +182,6 @@ INSERT INTO Customer_Order(id_client, id_account_manager, project_description) V
     )
 ;
 
-CREATE TABLE Project (
-  id_project Bigserial NOT NULL,
-  id_order Bigint NOT NULL,
-  id_project_manager Bigint NOT NULL,
-  id_creative_director Bigint NOT NULL,
-  technical_specification Text
-)
 INSERT INTO Project(id_order, id_project_manager, id_creative_director, technical_specification) VALUES
     (
         (select id_order from Customer_Order where project_description = 'Описание заказа1'),
