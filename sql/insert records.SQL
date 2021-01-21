@@ -17,10 +17,10 @@ INSERT INTO Priority(level, title) VALUES
 
 
 INSERT INTO Status(title) VALUES
-    ('Неактивна'),
-    ('Активна'),
-    ('Приостановлена'),
-    ('Выполнена')
+    ('неактивна'),
+    ('активна'),
+    ('приостановлена'),
+    ('выполнена')
 ;
 
 
@@ -310,3 +310,8 @@ INSERT INTO Project(id_order, id_project_manager, id_creative_director, technica
         'Техническое задание21'
     )
 ;
+
+select add_project_by_names('Описание заказа19',
+                            'Беспалова', 'Любовь', 'Адреевна',
+                            'Гусева', 'Александра', 'Олеговна',
+                            'Техническое задание22');

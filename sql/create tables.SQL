@@ -93,7 +93,7 @@ CREATE TABLE Customer_Order (
 )
 WITH (autovacuum_enabled=true);
 
-CREATE INDEX IX_Employee_to_Customer_Order ON Customer_Order (id_client);
+CREATE INDEX IX_Client_to_Customer_Order ON Customer_Order (id_client);
 
 CREATE INDEX IX_Employee_as_Account_Manager_to_Customer_Order ON Customer_Order (id_account_manager);
 
@@ -203,8 +203,8 @@ ALTER TABLE Task_Document ADD CONSTRAINT PK_task_document PRIMARY KEY (id_docume
 ALTER TABLE Employee  ADD CONSTRAINT Post_to_Employee
     FOREIGN KEY (id_post)
     REFERENCES post (id_post)
-      ON DELETE RESTRICT
-      ON UPDATE RESTRICT
+        ON DELETE RESTRICT
+        ON UPDATE RESTRICT
 ;
 
 ALTER TABLE Client  ADD CONSTRAINT Company_to_Client
@@ -214,7 +214,7 @@ ALTER TABLE Client  ADD CONSTRAINT Company_to_Client
       ON UPDATE RESTRICT
 ;
 
-ALTER TABLE Customer_Order  ADD CONSTRAINT Employee_to_Customer_Order
+ALTER TABLE Customer_Order  ADD CONSTRAINT Client_to_Customer_Order
     FOREIGN KEY (id_client)
     REFERENCES Client (id_client)
       ON DELETE RESTRICT
