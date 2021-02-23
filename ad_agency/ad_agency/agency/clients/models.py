@@ -10,6 +10,9 @@ class Company(models.Model):
     requisites = models.CharField(max_length=200, null=True, blank=True)
     phone = models.CharField(max_length=200, null=True, blank=True)
 
+    def __str__(self):
+        return self.name
+
 class Client(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
 
@@ -20,9 +23,12 @@ class Client(models.Model):
     email = models.CharField(max_length=200, null=True, blank=True)
 
     def __str__(self):
-        return str(self.last_name) + ' ' + str(self.first_name)
+        return self.last_name + ' ' + self.first_name
 
 class Order(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
     manager = models.ForeignKey(Employee, on_delete=models.CASCADE)
     description = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.description

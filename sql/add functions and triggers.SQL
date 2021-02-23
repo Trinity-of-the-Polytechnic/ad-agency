@@ -57,13 +57,13 @@ $$ language sql immutable parallel safe;
 create or replace function add_company (
     _name Clients_Company.name%type,
     _address Clients_Company.address%type default null,
-    _ogrn Clients_Company.ogrn%type default null,
-    _inn Clients_Company.inn%type default null,
+    _ogrn Clients_Company."OGRN"%type default null,
+    _inn Clients_Company."INN"%type default null,
     _requisites Clients_Company.requisites%type default null,
     _phone Clients_Company.phone%type default null
 )
 returns Clients_Company.id%type as $$
-    insert into Clients_Company(name, address, ogrn, inn, requisites, phone)
+    insert into Clients_Company(name, address, "OGRN", "INN", requisites, phone)
         values (_name, _address, _ogrn, _inn, _requisites, _phone)
         returning id;
 $$ language sql;
