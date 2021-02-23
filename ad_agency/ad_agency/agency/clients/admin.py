@@ -1,13 +1,17 @@
 from django.contrib import admin
 
+from advanced_filters.admin import AdminAdvancedFiltersMixin
+
 from .models import Client, Company, Order
 
 admin.site.site_header = 'Ad-agency'
 admin.site.site_title = 'Ad-agency'
 
-class CompanyAdmin(admin.ModelAdmin):
+
+class CompanyAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
     list_display = ['name', 'address', 'OGRN', 'INN', 'requisites', 'phone']
     ordering = ['name']
+    advanced_filter_fields = ('name')
 
 
 class ClientAdmin(admin.ModelAdmin):

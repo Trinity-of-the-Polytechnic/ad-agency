@@ -31,17 +31,21 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    # our apps
     'clients.apps.ClientsConfig',
     'staff.apps.StaffConfig',
     'documents.apps.DocumentsConfig',
     'projects.apps.ProjectsConfig',
     'tasks.apps.TasksConfig',
+    # django
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # additional
+    'advanced_filters',
 ]
 
 MIDDLEWARE = [
@@ -78,6 +82,7 @@ WSGI_APPLICATION = 'agency.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+"""
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -90,7 +95,7 @@ DATABASES = {
 }
 
 """
-for remote database
+#for remote database
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -101,7 +106,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-"""
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
