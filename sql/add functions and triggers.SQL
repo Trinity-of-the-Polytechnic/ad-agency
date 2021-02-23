@@ -55,32 +55,32 @@ $$ language sql immutable parallel safe;
 --
 
 create or replace function add_company (
-    _title_company Company.title_company%type,
-    _address Company.address%type default null,
-    _ogrn Company.ogrn%type default null,
-    _inn Company.inn%type default null,
-    _bank_details Company.bank_details%type default null,
-    _telephone Company.telephone%type default null
+    _name Clients_Company.name%type,
+    _address Clients_Company.address%type default null,
+    _ogrn Clients_Company.ogrn%type default null,
+    _inn Clients_Company.inn%type default null,
+    _requisites Clients_Company.requisites%type default null,
+    _phone Clients_Company.phone%type default null
 )
-returns Company.id_company%type as $$
-    insert into Company(title_company, address, ogrn, inn, bank_details, telephone)
-        values (_title_company, _address, _ogrn, _inn, _bank_details, _telephone)
-        returning id_company;
+returns Clients_Company.id%type as $$
+    insert into Clients_Company(name, address, ogrn, inn, requisites, phone)
+        values (_name, _address, _ogrn, _inn, _requisites, _phone)
+        returning id;
 $$ language sql;
 
 
 create or replace function add_client (
-    _last_name Client.last_name%type,
-    _name Client.name%type,
-    _id_company Client.id_company%type,
-    _patronymic Client.patronymic%type default null,
-    _phone Client.phone%type default null,
-    _email Client.email%type default null
+    _last_name Clients_Client.last_name%type,
+    _first_name Clients_Client.first_name%type,
+    _company Clients_Client.company%type,
+    _patronymic Clients_Client.patronymic%type default null,
+    _phone Clients_Client.phone%type default null,
+    _email Clients_Client.email%type default null
 )
-returns Client.id_client%type as $$
-    insert into Client(last_name, name, id_company, patronymic, phone, email)
-        values (_last_name, _name, _id_company, _patronymic, _phone, _email)
-        returning id_client;
+returns Clients_Client.id%type as $$
+    insert into Clients_Client(last_name, first_name, company, patronymic, phone, email)
+        values (_last_name, _first_name, _company, _patronymic, _phone, _email)
+        returning id;
 $$ language sql;
 
 
@@ -88,29 +88,29 @@ create or replace function add_project_by_names (
     _order_description TEXT,
 
     _project_manager_last_name TEXT,
-    _project_manager_name TEXT,
+    _project_manager_first_name TEXT,
     _project_manager_patronymic TEXT,
 
     _creative_director_last_name TEXT,
-    _creative_director_name TEXT,
+    _creative_director_first_name TEXT,
     _creative_director_patronymic TEXT,
 
-    _technical_specification Project.technical_specification%type
+    _technical_task Projects_Project.technical_task%type
 )
-returns Project.id_project%type as $$
-    insert into Project(id_order, id_project_manager, id_creative_director, technical_specification)
-        select co.id_order, pm.id_employee, cd.id_employee, _technical_specification
-            from Customer_Order as co,
-                Employee as pm,
-                Employee as cd
-            where co.project_description = _order_description
+returns Projects_Project.id%type as $$
+    insert into Projects_Project(client_order, project_manager, creative_director, technical_task)
+        select co.id, pm.id, cd.id, _technical_task
+            from Clients_Order as co,
+                Staff_Employee as pm,
+                Staff_Employee as cd
+            where co.description = _order_description
                 and pm.last_name = _project_manager_last_name
-                and pm.name = _project_manager_name
+                and pm.first_name = _project_manager_first_name
                 and pm.patronymic = _project_manager_patronymic
                 and cd.last_name = _creative_director_last_name
-                and cd.name = _creative_director_name
+                and cd.first_name = _creative_director_first_name
                 and cd.patronymic = _creative_director_patronymic
-        returning id_project;
+        returning id;
 $$ language sql;
 
 
@@ -120,58 +120,58 @@ $$ language sql;
 --
 
 create or replace function add_work_report (
-    _number Document.number%type,
-    _id_project Document.id_project%type
+    _number Documents_Document.number%type,
+    _id_project Documents_Document.project%type
 )
-returns Document.id_document%type as $$
-    insert into Document(number, id_doc_type, id_project, id_order, id_employee)
-        select _number, dt.id_doc_type, id_project, p.id_order, p.id_project_manager
-            from Doc_Type as dt, Project as p
-            where dt.type_title = get_work_report_title()
-                and p.id_project = _id_project
-        returning id_document;
+returns Documents_Document.id%type as $$
+    insert into Documents_Document(number, document_type, project, client_order, responsible)
+        select _number, dt.id, p.id, p.client_order, p.project_manager
+            from Documents_DocumentType as dt, Projects_Project as p
+            where dt.type_name = get_work_report_title()
+                and p.id = _id_project
+        returning id;
 $$ language sql;
 
 
 create or replace function add_contract (
-    _number Document.number%type,
-    _id_creative_director Document.id_employee%type,
-    _id_order Document.id_order%type
+    _number Documents_Document.number%type,
+    _id_creative_director Documents_Document.id%type,
+    _id_order Documents_Document.client_order%type
 )
-returns Document.id_document%type as $$
-    insert into Document(number, id_doc_type, id_order, id_employee)
-        select _number, dt.id_doc_type, _id_order, _id_creative_director
-            from Doc_Type as dt
-            where type_title = get_contract_title()
-        returning id_document;
+returns Documents_Document.id%type as $$
+    insert into Documents_Document(number, document_type, client_order, responsible)
+        select _number, dt.id, _id_order, _id_creative_director
+            from Documents_DocumentType as dt
+            where dt.type_name = get_contract_title()
+        returning id;
 $$ language sql;
 
 
 create or replace function add_simple_document (
-    _number Document.number%type,
-    _id_doc_type Document.id_doc_type%type,
-    _id_project Document.id_project%type
+    _number Documents_Document.number%type,
+    _id_doc_type Documents_Document.document_type%type,
+    _id_project Documents_Document.project%type
 )
-returns Document.id_document%type as $$
-    insert into Document(number, id_doc_type, id_project)
+returns Documents_Document.id%type as $$
+    insert into Documents_Document(number, document_type, project)
         values (_number, _id_doc_type, _id_project)
-        returning id_document;
+        returning id;
 $$ language sql;
 
 
 --
--- insertion of customer order
+-- insertion to Clients_Order
 --
 
-create or replace function add_customer_order (
-    _id_client Customer_Order.id_client%type,
-    _id_account_manager Customer_Order.id_account_manager%type,
-    _project_description Customer_Order.project_description%type default null
+create or replace function add_client_order (
+    _id_client Clients_Order.client%type,
+    _id_account_manager Clients_Order.manager%type,
+    _project_description Clients_Order.description%type default null
 )
-returns Customer_Order.id_order%type as $$
-    insert into Customer_Order(id_client, id_account_manager, project_description)
+returns Clients_Order.id%type as $$
+    insert into Clients_Order(client, manager, description)
         values (_id_client, _id_account_manager, _project_description)
-        returning id_order;
+        returning id;
 $$ language sql;
 
 
@@ -180,36 +180,36 @@ $$ language sql;
 --
 
 create or replace function add_task (
-    _id_project Task.id_project%type,
-    _deadline_data Task.deadline%type,
-    _description Task.description%type,
-    _priority_title Priority.title%type default 'средний',
-    _status_title Status.title%type default 'неактивна'
+    _id_project Tasks_Task.project%type,
+    _deadline_data Tasks_Task.deadline%type,
+    _description Tasks_Task.description%type,
+    _priority_name Tasks_Priority.priority_name%type default 'средний',
+    _status_name Tasks_Status.name%type default 'неактивна'
 )
-returns Task.id_task%type as $$
-    insert into Task(id_project, deadline, description, id_priority, id_status)
-        select _id_project, _deadline_data, _description, p.id_priority, s.id_status
-            from Priority as p, Status as s
-            where p.title = _priority_title
-                and s.title = _status_title
-        returning id_task;
+returns Tasks_Task.id%type as $$
+    insert into Tasks_Task(project, deadline, description, priority, status)
+        select _id_project, _deadline_data, _description, p.id, s.id
+            from Tasks_Priority as p, Tasks_Status as s
+            where p.priority_name = _priority_name
+                and s.name = _status_name
+        returning id;
 $$ language sql;
 
 
 create or replace function add_task_by_interval (
-    _id_project Task.id_project%type,
+    _id_project Tasks_Task.project%type,
     _deadline_interval interval,
-    _description Task.description%type,
-    _priority_title Priority.title%type default 'средний',
-    _status_title Status.title%type default 'неактивна'
+    _description Tasks_Task.description%type,
+    _priority_name Tasks_Priority.priority_name%type default 'средний',
+    _status_name Tasks_Status.name%type default 'неактивна'
 )
-returns Task.id_task%type as $$
+returns Tasks_Task.id%type as $$
     select add_task(
         _id_project => _id_project,
         _deadline_data => date(current_date + _deadline_interval),
         _description => _description,
-        _priority_title => _priority_title,
-        _status_title => _status_title
+        _priority_name => _priority_name,
+        _status_name => _status_name
     );
 $$ language sql;
 
@@ -219,27 +219,27 @@ $$ language sql;
 --
 
 create or replace function cancel_expired_tasks (
-    _id_project Task.id_project%type
+    _id_project Tasks_Task.project%type
 )
 returns bigint as $$
 declare
     canceled_id_status bigint := (
-        select id_status from Status where title = get_canceled_state_title()
+        select s.id from Tasks_Status s where s.name = get_canceled_state_title()
     );
     done_id_status bigint := (
-        select id_status from Status where title = get_done_state_title()
+        select s.id from Tasks_Status s where s.name = get_done_state_title()
     );
     
     updated_amount bigint;
 begin
     with ut as (
-        update Task as t
-            set id_status = canceled_id_status
-            where t.id_project = _id_project
+        update Tasks_Task as t
+            set status = canceled_id_status
+            where t.project = _id_project
                 and t.deadline < current_date
-                and t.id_status != canceled_id_status
-                and t.id_status != done_id_status
-            returning t.id_task
+                and t.status != canceled_id_status
+                and t.status != done_id_status
+            returning t.id
     )
     select count(*) into updated_amount from ut;
 
@@ -253,52 +253,52 @@ $$ language plpgsql;
 -- functions for the most frequent requests
 --
 
-drop type if exists Employee_with_Task_Amount cascade;
+drop type if exists BusyEmployee cascade;
 
-create type Employee_with_Task_Amount as (
-    employee Employee,
+create type BusyEmployee as (
+    employee Staff_Employee,
     task_amount bigint
 );
 
-create or replace function get_most_available_employees_list (_id_post Employee.id_post%type)
-returns setof Employee_with_Task_Amount as $$
+create or replace function get_most_available_employees_list (_id_post Staff_Employee.post%type)
+returns setof BusyEmployee as $$
 declare
     ignored_id_status bigint[] := array(
-        select id_status
-            from Status
-            where title = get_canceled_state_title()
-                or title = get_done_state_title()
+        select s.id
+            from Tasks_Status s
+            where name = get_canceled_state_title()
+                or name = get_done_state_title()
     );
 begin
-    return query select e, count(t.id_task)
-        from Employee as e
+    return query select e, count(ett.task)
+        from Staff_Employee as e
             left join (
-                Task_Employee join Task using (id_task)
-            ) as t
-            using (id_employee)
-        where e.id_post = _id_post
-            and array_position(ignored_id_status, t.id_status) is null
-        group by e.id_employee
-        order by count(t.id_task), e.last_name, e.name, e.patronymic;
+                Tasks_EmployeeTask et join Tasks_Task t on (et.task = t.id)
+            ) as ett
+            on (e.id = ett.employee)
+        where e.post = _id_post
+            and array_position(ignored_id_status, ett.status) is null
+        group by e.id
+        order by count(ett.task), e.last_name, e.first_name, e.patronymic;
     return;
 end;
 $$ language plpgsql;
 
 
 create or replace function get_employee_task_list (
-    _id_employee Employee.id_employee%type,
-    _status_title Status.title%type default null
+    _id_employee Staff_Employee.id%type,
+    _status_name Tasks_Status.name%type default null
 )
-returns setof Task as $$
+returns setof Tasks_Task as $$
     select t.*
-        from Task as t
-            join Status as s using (id_status)
-            join Task_Employee as te using (id_task)
-        where te.id_employee = _id_employee and (
-                _status_title is null
-                or s.title = _status_title
+        from Tasks_Task as t
+            join Tasks_Status as s on (t.status = s.id)
+            join Tasks_EmployeeTask as et on (et.task = t.id)
+        where et.employee = _id_employee and (
+                _status_name is null
+                or s.name = _status_name
             )
-        group by t.id_task;
+        group by t.id;
 $$ language sql;
 
 
@@ -309,24 +309,24 @@ $$ language sql;
 
 create or replace function on_insert_doc() returns trigger as $$
 declare
-    work_report_id constant Doc_Type.id_doc_type%type := (
-        select id_doc_type from Doc_Type where type_title = get_work_report_title()
+    work_report_id constant Documents_DocumentType.id%type := (
+        select dt.id from Documents_DocumentType dt where dt.type_name = get_work_report_title()
     );
-    contract_id constant Doc_Type.id_doc_type%type := (
-        select id_doc_type from Doc_Type where type_title = get_contract_title()
+    contract_id constant Documents_DocumentType.id%type := (
+        select dt.id from Documents_DocumentType dt where dt.type_name = get_contract_title()
     );
     
-    project_manager_post_id constant Post.id_post%type := (
-        select id_post from Post where title = get_project_manager_post_title()
+    project_manager_post_id constant Staff_Post.id%type := (
+        select p.id from Staff_Post p where p.name = get_project_manager_post_title()
     );
-    creative_director_post_id constant Post.id_post%type := (
-        select id_post from Post where title = get_creative_director_post_title()
+    creative_director_post_id constant Staff_Post.id%type := (
+        select p.id from Staff_Post p where p.name = get_creative_director_post_title()
     );
 
-    cur_post_id Post.id_post%type := (
-        select id_post
-            from Employee natural join Post
-            where id_employee = new.id_employee
+    cur_post_id Staff_Post.id%type := (
+        select p.id
+            from Staff_Employee e join Staff_Post p on (e.post = p.id)
+            where e.id = new.responsible
     );
 
 begin
@@ -340,18 +340,18 @@ begin
         'missing employee post: ' || get_creative_director_post_title();
 
 
-    if new.id_doc_type = work_report_id and cur_post_id is distinct from project_manager_post_id then
+    if new.document_type = work_report_id and cur_post_id is distinct from project_manager_post_id then
         raise exception
             'document (number = "%") of type "%" must have employee with post "%" instead of "%"',
             new.number, get_work_report_title(), get_project_manager_post_title(),
-            (select title from Post where id_post = cur_post_id);
+            (select name from Staff_Post where post = cur_post_id);
     end if;
     
-    if new.id_doc_type = contract_id and cur_post_id is distinct from creative_director_post_id then
+    if new.document_type = contract_id and cur_post_id is distinct from creative_director_post_id then
         raise exception
             'document (number = "%") of type "%" must have employee with post "%" instead of "%"',
             new.number, get_contract_title(), get_creative_director_post_title(),
-            (select title from Post where id_post = cur_post_id);
+            (select name from Staff_Post where post = cur_post_id);
     end if;
     
     new.creation_date := current_date;
@@ -360,22 +360,22 @@ end;
 $$ language plpgsql;
 
 
-drop trigger if exists on_insert_doc_trigger on Document;
+drop trigger if exists on_insert_doc_trigger on Documents_Document;
 
-create trigger on_insert_doc_trigger BEFORE INSERT on Document
+create trigger on_insert_doc_trigger BEFORE INSERT on Documents_Document
     for each row execute procedure on_insert_doc();
 
 
 
-create or replace function on_insert_customer_order() returns trigger as $$
+create or replace function on_insert_client_order() returns trigger as $$
 declare
-    accaunt_manager_post_id constant Post.id_post%type := (
-        select id_post from Post where title = get_accaunt_manager_post_title()
+    accaunt_manager_post_id constant Staff_Post.id%type := (
+        select p.id from Staff_Post p where p.name = get_accaunt_manager_post_title()
     );
-    cur_post_id Post.id_post%type := (
-        select id_post
-            from Employee natural join Post
-            where id_employee = new.id_account_manager
+    cur_post_id Staff_Post.id%type := (
+        select p.id
+            from Staff_Employee e join Staff_Post p on (e.post = p.id)
+            where e.id = new.manager
     );
 begin
     assert accaunt_manager_post_id is not null,
@@ -383,21 +383,21 @@ begin
 
     if cur_post_id is distinct from accaunt_manager_post_id then
         raise exception
-            'customer order must have employee with post "%" instead of "%"',
+            'Clients_Order must have employee with post "%" instead of "%"',
             get_accaunt_manager_post_title(),
-            (select title from Post where id_post = cur_post_id);
+            (select p.name from Staff_Post p where p.id = cur_post_id);
     end if;
 
-    if new.project_description is null then
+    if new.description is null then
         select concat(
-                'Аккаунт-менеджежер: ', e.last_name, ' ', e.name, '\n',
-                'Заказчик: ', c.last_name, ' ', c.name, ' ', c.patronymic, '\n',
+                'Аккаунт-менеджежер: ', e.last_name, ' ', e.first_name, '\n',
+                'Заказчик: ', c.last_name, ' ', c.first_name, ' ', c.patronymic, '\n',
                 'Дата: ', current_date
             )
-            from Employee as e, Client as c
-            into new.project_description
-            where e.id_employee = new.id_account_manager
-                and c.id_client = new.id_client;
+            from Staff_Employee as e, Clients_Client as c
+            into new.description
+            where e.id = new.manager
+                and c.id = new.client;
     end if;
 
     return new;
@@ -405,7 +405,7 @@ end;
 $$ language plpgsql;
 
 
-drop trigger if exists on_insert_customer_order_trigger on Customer_Order;
+drop trigger if exists on_insert_client_order_trigger on Clients_Order;
 
-create trigger on_insert_customer_order_trigger BEFORE INSERT on Customer_Order
-    for each row execute procedure on_insert_customer_order();
+create trigger on_insert_client_order_trigger BEFORE INSERT on Clients_Order
+    for each row execute procedure on_insert_client_order();
