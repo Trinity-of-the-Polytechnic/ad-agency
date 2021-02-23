@@ -13,7 +13,7 @@ class Status(models.Model):
 
 class Task(models.Model):
     description = models.CharField(max_length=1000)
-    deadline = models.DateField()
+    deadline = models.DateField(null=True, blank=True)
     prority = models.ForeignKey(Priority, on_delete=models.CASCADE)
     project = models.ForeignKey(Project, on_delete=models.CASCADE)
     status = models.ForeignKey(Status, on_delete=models.CASCADE)

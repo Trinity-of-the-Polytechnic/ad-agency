@@ -6,7 +6,7 @@ class Post(models.Model):
 class Employee(models.Model):
     last_name = models.CharField(max_length=200)
     first_name = models.CharField(max_length=200)
-    patronymic = models.CharField(max_length=200)
-    birthdate = models.DateField()
+    patronymic = models.CharField(max_length=200, null=True, blank=True)
+    birthdate = models.DateField(null=True, blank=True)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
 

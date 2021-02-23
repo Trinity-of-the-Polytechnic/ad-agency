@@ -6,3 +6,4 @@ from .models import Client, Company, Order
 admin.site.register(Client)
 admin.site.register(Company)
 admin.site.register(Order)
+admin.site.site_header = 'Ad-agency'

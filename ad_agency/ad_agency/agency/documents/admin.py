@@ -4,4 +4,3 @@ from .models import Document, DocumentType
 
 admin.site.register(Document)
 admin.site.register(DocumentType)
-
