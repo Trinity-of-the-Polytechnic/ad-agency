@@ -9,4 +9,6 @@ class Project(models.Model):
     creative_director = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="creative_director")
     project_manager = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="project_manager")
 
+    def __str__(self):
+        return str(self.client_order)
 
