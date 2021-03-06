@@ -1,0 +1,53 @@
+Accaunt Manager получает полный доступ к записям таблиц:
+	- Clients_Client
+	- Clients_Company
+	- Clients_Order
+	- Documents_Document, но только для записей с типом 'Договор'
+		другими словами те, у которых (Documents_DocumentType.type_name == 'Договор')
+		условие не должно нарушаться у создаваемой записи
+
+
+
+Project Manager получает
+- доступ на чтение к таблицам:
+	- Clients_Client
+	- Clients_Company
+	- Clients_Order
+	- Staff_Employee
+
+
+- полный доступ к записям, связанным с проектами данного пользователя, в таких таблицах как:
+	- Projects_Project:
+		(Projects_Project.project_manager_id == Staff_Employee.id),
+			где Staff_Employee.id - id текущего пользователя,
+		то есть доступ ко всем проектам текущего пользователя
+		условие не должно нарушаться у создаваемой записи
+		
+	- Tasks_Task:
+		(Tasks_Task.project_id == Projects_Project.id)
+			and (Projects_Project.project_manager_id == Staff_Employee.id),
+		то есть доступ ко всем задачам, связанным с проектами текущего пользователя
+		условие не должно нарушаться у создаваемой записи
+		
+	- Tasks_EmployeeTask:
+		(Tasks_EmployeeTask.task_id == Tasks_Task.id)
+			and (Tasks_Task.project_id == Projects_Project.id)
+			and (Projects_Project.project_manager_id == Staff_Employee.id),
+		то есть доступ ко всем записям, связанным с задачами, которые относятся к проектам текущего пользователя
+		условие не должно нарушаться у создаваемой записи
+		
+	- Documents_Document:
+		(Documents_Document.project_id == Projects_Project.id)
+			and (Projects_Project.project_manager_id == Staff_Employee.id),
+		то есть доступ ко всем документам, связанным с проектами текущего пользователя
+		условие не должно нарушаться у создаваемой записи
+		
+	- Tasks_ReportingTask:
+		(Tasks_ReportingTask.task_id == Tasks_Task.id)
+			and (Tasks_Task.project_id == Projects_Project.id)
+			and (Projects_Project.project_manager_id == Staff_Employee.id),
+		то есть доступ ко всем записям, связанным с задачами, которые относятся к проектам текущего пользователя
+		условие не должно нарушаться у создаваемой записи
+
+
+Creative Director - админ, который имеет полный доступ ко всему

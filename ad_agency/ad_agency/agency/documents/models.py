@@ -11,6 +11,10 @@ class DocumentType(models.Model):
     def __str__(self):
         return self.type_name
 
+    class Meta:
+        verbose_name = 'Тип документы'
+        verbose_name_plural = 'Типы документов'
+
 
 class Document(models.Model):
     number = models.CharField(max_length=255)
@@ -22,5 +26,9 @@ class Document(models.Model):
 
     def __str__(self):
         return self.number
+
+    class Meta:
+        verbose_name = 'Документ'
+        verbose_name_plural = 'Документы'
 
 
