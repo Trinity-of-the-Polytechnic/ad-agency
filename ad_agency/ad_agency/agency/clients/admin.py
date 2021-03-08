@@ -1,8 +1,10 @@
 from django.contrib import admin
-
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 
 from .models import Client, Company, Order
+from staff.models import Employee
+
+from helper.utils import extract_employee_id
 
 admin.site.site_header = 'Ad-agency'
 admin.site.site_title = 'Ad-agency'
@@ -24,11 +26,11 @@ class OrderAdmin(admin.ModelAdmin):
     ordering = ['client']
 
     def get_queryset(self, request):
-        # TODO add query set for account manager
-        #if request.user.groups.filter(name='Account Manager').exists():
-        #    return super().get_queryset(request).filter(manager='')
-        #else:
-        return super().get_queryset(request)
+        if request.user.groups.filter(name='Account Manager').exists():
+            user_id = extract_employee_id(request.user.username)
+            return super().get_queryset(request).filter(manager=Employee.objects.get(id=int(user_id)))
+        else:
+            return super().get_queryset(request)
 
 
 admin.site.register(Company, CompanyAdmin)

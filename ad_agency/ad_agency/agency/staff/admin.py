@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from transliterate import translit
 
 from .models import Employee, Post
-
+from helper.utils import translit
 
 class EmployeeAdmin(admin.ModelAdmin):
     list_display = ['last_name', 'first_name', 'patronymic', 'birthdate', 'post']
@@ -22,8 +22,7 @@ class EmployeeAdmin(admin.ModelAdmin):
             obj.delete()
 
     def delete_related_user(self, request, obj):
-        nick_name = translit(obj.first_name + '_' + obj.last_name, reversed=True) + '_' + str(obj.id)
-        nick_name = nick_name.replace('\'', '')
+        nick_name = translit(f'{obj.first_name}_{obj.last_name}_{str(obj.id)}')
         try:
             user = User.objects.get(username=nick_name)
             user.delete()
@@ -32,8 +31,7 @@ class EmployeeAdmin(admin.ModelAdmin):
 
     def migrate_employees_to_users(self, request, queryset):
         for obj in queryset:
-            nick_name = translit(obj.first_name + '_' + obj.last_name, reversed=True) + '_' + str(obj.id)
-            nick_name = nick_name.replace('\'', '')
+            nick_name = translit(f'{obj.first_name}_{obj.last_name}_{str(obj.id)}')
 
             if not User.objects.filter(username=nick_name).exists():
                 group = None

@@ -2,8 +2,8 @@ import re
 import transliterate as t
 
 
-def translit(str):
-    translated = t.translit(str, language_code='ru', reversed=True)
+def translit(string):
+    translated = t.translit(string, language_code='ru', reversed=True)
     return translated.replace('\'', '')
 
 
