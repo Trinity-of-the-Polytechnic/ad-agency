@@ -11,14 +11,28 @@ admin.site.site_title = 'Ad-agency'
 
 
 class CompanyAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
-    list_display = ['name', 'address', 'OGRN', 'INN', 'requisites', 'phone']
     ordering = ['name']
     advanced_filter_fields = ('name')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['name', 'Название'], ['address', 'Адрес'], ['OGRN', 'ОГРН'],
+                      ['INN', 'ИНН'], ['requisites', 'Реквизиты'], ['phone', 'Телефон']]
+        russify_columns(self, to_russian)
+
 
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ['last_name', 'first_name', 'patronymic', 'company', 'phone', 'email']
     ordering = ['last_name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['last_name', 'Фамилия'], ['first_name', 'Имя'], ['patronymic', 'Отчество'],
+                      ['company', 'Компания'], ['phone', 'Телефон'], ['email', 'Электронная почта']]
+        russify_columns(self, to_russian)
 
 
 class OrderAdmin(admin.ModelAdmin):
