@@ -19,7 +19,7 @@ create or replace function get_creative_director_post_title() returns text as $$
     select text 'Креативный директор'
 $$ language sql immutable parallel safe;
 
-create or replace function get_accaunt_manager_post_title() returns text as $$
+create or replace function get_account_manager_post_title() returns text as $$
     select text 'Аккаунт-менеджер'
 $$ language sql immutable parallel safe;
 
@@ -369,8 +369,8 @@ create trigger on_insert_doc_trigger BEFORE INSERT on Documents_Document
 
 create or replace function on_insert_client_order() returns trigger as $$
 declare
-    accaunt_manager_post_id constant Staff_Post."id"%type := (
-        select p."id" from Staff_Post p where p."name" = get_accaunt_manager_post_title()
+    account_manager_post_id constant Staff_Post."id"%type := (
+        select p."id" from Staff_Post p where p."name" = get_account_manager_post_title()
     );
     cur_post_id Staff_Post."id"%type := (
         select p."id"
@@ -378,13 +378,13 @@ declare
             where e."id" = new."manager_id"
     );
 begin
-    assert accaunt_manager_post_id is not null,
-        'missing "employee_id" "post_id": ' || get_accaunt_manager_post_title();
+    assert account_manager_post_id is not null,
+        'missing "employee_id" "post_id": ' || get_account_manager_post_title();
 
-    if cur_post_id is distinct from accaunt_manager_post_id then
+    if cur_post_id is distinct from account_manager_post_id then
         raise exception
             'Clients_Order must have "employee_id" with "post_id" "%" instead of "%"',
-            get_accaunt_manager_post_title(),
+            get_account_manager_post_title(),
             (select p."name" from Staff_Post p where p."id" = cur_post_id);
     end if;
 
