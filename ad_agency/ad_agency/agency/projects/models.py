@@ -3,6 +3,7 @@ from django.db import models
 from clients.models import Order
 from staff.models import Employee
 
+
 class Project(models.Model):
     technical_task = models.CharField(max_length=10000, null=True, blank=True)
     client_order = models.ForeignKey(Order, on_delete=models.CASCADE)
