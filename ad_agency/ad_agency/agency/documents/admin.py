@@ -7,7 +7,7 @@ class DocumentAdmin(admin.ModelAdmin):
     list_display = ['number', 'creation_date', 'document_type', 'responsible',
                     'client_order', 'project']
     ordering = ['number']
-
+    
     def get_queryset(self, request):
         if request.user.groups.filter(name='Account Manager').exists():
             return super().get_queryset(request).filter(document_type=DocumentType.objects.get(type_name='Договор'))

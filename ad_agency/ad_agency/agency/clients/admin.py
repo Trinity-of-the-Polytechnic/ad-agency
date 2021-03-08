@@ -23,6 +23,13 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['description', 'client', 'manager']
     ordering = ['client']
 
+    def get_queryset(self, request):
+        # TODO add query set for account manager
+        #if request.user.groups.filter(name='Account Manager').exists():
+        #    return super().get_queryset(request).filter(manager='')
+        #else:
+        return super().get_queryset(request)
+
 
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Client, ClientAdmin)

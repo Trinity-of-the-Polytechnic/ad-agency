@@ -12,12 +12,23 @@ class EmployeeAdmin(admin.ModelAdmin):
     ordering = ['last_name']
     actions = ['migrate_employees_to_users']
 
+    def delete_model(self, request, obj):
+        self.delete_related_user(request, obj)
+        obj.delete()
+
     def delete_queryset(self, request, queryset):
         for obj in queryset:
-            nick_name = translit(obj.first_name + '_' + obj.last_name, reversed=True) + '_' + str(obj.id)
-            nick_name = nick_name.replace('\'', '')
+            self.delete_related_user(request, obj)
+            obj.delete()
+
+    def delete_related_user(self, request, obj):
+        nick_name = translit(obj.first_name + '_' + obj.last_name, reversed=True) + '_' + str(obj.id)
+        nick_name = nick_name.replace('\'', '')
+        try:
             user = User.objects.get(username=nick_name)
             user.delete()
+        except User.DoesNotExist:
+            return
 
     def migrate_employees_to_users(self, request, queryset):
         for obj in queryset:
@@ -25,20 +36,20 @@ class EmployeeAdmin(admin.ModelAdmin):
             nick_name = nick_name.replace('\'', '')
 
             if not User.objects.filter(username=nick_name).exists():
+                group = None
                 if obj.post.name == 'Аккаунт-менеджер':
-                    User.objects.create_user(username=nick_name, password='qwerty', is_staff=True)
-                    Group.objects.get(name='Account Manager').user_set.add(User.objects.get(username=nick_name))
+                    group = 'Account Manager'
                 elif obj.post.name == 'Дизайнер':
-                    User.objects.create_user(username=nick_name, password='qwerty', is_staff=True)
-                    Group.objects.get(name='Designer').user_set.add(User.objects.get(username=nick_name))
+                    group = 'Designer'
                 elif obj.post.name == 'Креативный директор':
-                    User.objects.create_user(username=nick_name, password='qwerty', is_staff=True)
-                    Group.objects.get(name='Creative Director').user_set.add(User.objects.get(username=nick_name))
+                    group = 'Creative Director'
                 elif obj.post.name == 'Руководитель проектов':
-                    User.objects.create_user(username=nick_name, password='qwerty', is_staff=True)
-                    Group.objects.get(name='Project Manager').user_set.add(User.objects.get(username=nick_name))
+                    group = 'Project Manager'
                 else:
                     raise Exception('Unregistered post in the system. contact your administrator')
+                User.objects.create_user(username=nick_name, password='qwerty', is_staff=True,
+                                         first_name=obj.first_name, last_name=obj.last_name)
+                Group.objects.get(name=group).user_set.add(User.objects.get(username=nick_name))
 
     migrate_employees_to_users.short_description = 'Зарегистироравать сотрудников как пользователей'
 

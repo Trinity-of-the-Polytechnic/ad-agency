@@ -14,6 +14,10 @@ class Company(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Компания'
+        verbose_name_plural = 'Компании'
+
 
 class Client(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
@@ -27,6 +31,10 @@ class Client(models.Model):
     def __str__(self):
         return self.last_name + ' ' + self.first_name
 
+    class Meta:
+        verbose_name = 'Клиент'
+        verbose_name_plural = 'Клиенты'
+
 
 class Order(models.Model):
     client = models.ForeignKey(Client, on_delete=models.CASCADE)
@@ -35,3 +43,7 @@ class Order(models.Model):
 
     def __str__(self):
         return self.description
+
+    class Meta:
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
