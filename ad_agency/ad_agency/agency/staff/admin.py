@@ -7,6 +7,7 @@ from transliterate import translit
 from .models import Employee, Post
 from helper.utils import translit
 
+
 class EmployeeAdmin(admin.ModelAdmin):
     list_display = ['last_name', 'first_name', 'patronymic', 'birthdate', 'post']
     ordering = ['last_name']

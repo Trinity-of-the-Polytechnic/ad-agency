@@ -8,15 +8,6 @@ class DocumentAdmin(admin.ModelAdmin):
                     'client_order', 'project']
     ordering = ['number']
 
-    """
-    def get_form(self, request, obj=None, **kwargs):
-        form = super().get_form(request, obj, **kwargs)
-        if request.user.groups.filter(name='Account Manager').exists():
-            form.base_fields['document_type'].initial = DocumentType.objects.get(type_name='Договор')
-            form.base_fields['document_type'].disabled = True
-        return form
-    """
-
 
 class DocumentTypeAdmin(admin.ModelAdmin):
     list_display = ['type_name']

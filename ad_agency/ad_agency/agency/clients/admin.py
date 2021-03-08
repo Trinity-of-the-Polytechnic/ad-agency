@@ -22,9 +22,10 @@ class ClientAdmin(admin.ModelAdmin):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['description', 'client', 'manager']
+    list_display = ['description', 'client_view', 'manager']
     ordering = ['client']
 
+    # short descriptions
     def get_queryset(self, request):
         if request.user.groups.filter(name='Account Manager').exists():
             user_id = extract_employee_id(request.user.username)
