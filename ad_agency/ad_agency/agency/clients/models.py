@@ -41,10 +41,6 @@ class Order(models.Model):
     manager = models.ForeignKey(Employee, on_delete=models.CASCADE)
     description = models.CharField(max_length=1000)
 
-    def client_view(self):
-        return self.client.__str__()[0]
-    client_view.short_description = 'Клиент'
-
     def __str__(self):
         return self.description
 

@@ -5,6 +5,7 @@ from .models import Client, Company, Order
 from staff.models import Employee
 
 from helper.utils import extract_employee_id
+from helper.utils import russify_columns
 
 admin.site.site_header = 'Ad-agency'
 admin.site.site_title = 'Ad-agency'
@@ -22,10 +23,15 @@ class ClientAdmin(admin.ModelAdmin):
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['description', 'client_view', 'manager']
     ordering = ['client']
 
-    # short descriptions
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['manager', 'Менеджер'], ['client', 'Клиент'], ['description', 'Описание']]
+        russify_columns(self, to_russian)
+
     def get_queryset(self, request):
         if request.user.groups.filter(name='Account Manager').exists():
             user_id = extract_employee_id(request.user.username)
