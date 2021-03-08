@@ -32,6 +32,14 @@ class OrderAdmin(admin.ModelAdmin):
         else:
             return super().get_queryset(request)
 
+    def get_form(self, request, obj=None, **kwargs):
+        form = super().get_form(request, obj, **kwargs)
+        if request.user.groups.filter(name='Account Manager').exists():
+            user_id = extract_employee_id(request.user.username)
+            form.base_fields['manager'].initial = Employee.objects.get(id=int(user_id))
+            form.base_fields['manager'].disabled = True
+        return form
+
 
 admin.site.register(Company, CompanyAdmin)
 admin.site.register(Client, ClientAdmin)
