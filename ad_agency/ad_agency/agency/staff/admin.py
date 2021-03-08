@@ -5,13 +5,20 @@ from django.contrib.auth.models import Group
 from transliterate import translit
 
 from .models import Employee, Post
-from helper.utils import translit
+from helper.utils import translit, russify_columns
 
 
 class EmployeeAdmin(admin.ModelAdmin):
-    list_display = ['last_name', 'first_name', 'patronymic', 'birthdate', 'post']
     ordering = ['last_name']
     actions = ['migrate_employees_to_users']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['last_name', 'Фамилия'], ['first_name', 'Имя'], ['patronymic', 'Отчество'],
+                      ['birthdate', 'Дата рождения'], ['post', 'Должность']]
+        russify_columns(self, to_russian)
 
     def delete_model(self, request, obj):
         self.delete_related_user(request, obj)
@@ -54,8 +61,14 @@ class EmployeeAdmin(admin.ModelAdmin):
 
 
 class PostAdmin(admin.ModelAdmin):
-    list_display = ['name']
     ordering = ['name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['name', 'Наименование должности']]
+        russify_columns(self, to_russian)
 
 
 admin.site.register(Employee, EmployeeAdmin)

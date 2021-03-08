@@ -7,6 +7,10 @@ class Post(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = 'Должность'
+        verbose_name_plural = 'Должности'
+
 
 class Employee(models.Model):
     last_name = models.CharField(max_length=200)
@@ -17,3 +21,7 @@ class Employee(models.Model):
 
     def __str__(self):
         return self.last_name + ' ' + self.first_name
+
+    class Meta:
+        verbose_name = 'Сотрудник'
+        verbose_name_plural = 'Сотрудники'

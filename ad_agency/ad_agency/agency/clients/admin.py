@@ -4,8 +4,7 @@ from advanced_filters.admin import AdminAdvancedFiltersMixin
 from .models import Client, Company, Order
 from staff.models import Employee
 
-from helper.utils import extract_employee_id
-from helper.utils import russify_columns
+from helper.utils import extract_employee_id, russify_columns
 
 admin.site.site_header = 'Ad-agency'
 admin.site.site_title = 'Ad-agency'

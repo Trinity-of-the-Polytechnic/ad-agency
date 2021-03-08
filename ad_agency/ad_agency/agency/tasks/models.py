@@ -12,12 +12,20 @@ class Priority(models.Model):
     def __str__(self):
         return self.priority_name
 
+    class Meta:
+        verbose_name = 'Приоритет'
+        verbose_name_plural = 'Приоритеты'
+
 
 class Status(models.Model):
     name = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = 'Статус'
+        verbose_name_plural = 'Статусы'
 
 
 class Task(models.Model):
@@ -30,6 +38,10 @@ class Task(models.Model):
     def __str__(self):
         return str(self.project)
 
+    class Meta:
+        verbose_name = 'Задача'
+        verbose_name_plural = 'Задачи'
+
 
 class EmployeeTask(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
@@ -38,6 +50,10 @@ class EmployeeTask(models.Model):
     def __str__(self):
         return str(self.task) + ' ' + str(self.employee)
 
+    class Meta:
+        verbose_name = 'Сотрудник'
+        verbose_name_plural = 'Сотрудники'
+
 
 class ReportingTask(models.Model):
     task = models.ForeignKey(Task, on_delete=models.CASCADE)
@@ -45,3 +61,7 @@ class ReportingTask(models.Model):
 
     def __str__(self):
         return str(self.task) + ' ' + str(self.report)
+
+    class Meta:
+        verbose_name = 'Отчет по задаче'
+        verbose_name_plural = 'Отчеты по задачам'
