@@ -13,3 +13,6 @@ class Project(models.Model):
     def __str__(self):
         return str(self.client_order)
 
+    class Meta:
+        verbose_name = 'Проект'
+        verbose_name_plural = 'Проекты'

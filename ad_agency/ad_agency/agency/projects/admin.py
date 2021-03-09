@@ -1,13 +1,12 @@
 from django.contrib import admin
 
-from helper.utils import extract_employee_id
-
 from .models import Project
 from staff.models import Employee, Post
 
+from helper.utils import extract_employee_id, russify_columns
+
 
 class ProjectAdmin(admin.ModelAdmin):
-    list_display = ['technical_task', 'client_order', 'creative_director', 'project_manager']
     ordering = ['client_order']
 
     def get_queryset(self, request):
@@ -26,6 +25,14 @@ class ProjectAdmin(admin.ModelAdmin):
             form.base_fields['creative_director'].queryset = Employee.objects.filter(
                 post=Post.objects.get(name='Креативный директор'))
         return form
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['technical_task', 'Техническое задание'], ['client_order', 'Заказ'],
+                      ['creative_director', 'Креативный директор'], ['project_manager', 'Менеджер проекта']]
+        russify_columns(self, to_russian)
 
 
 admin.site.register(Project, ProjectAdmin)

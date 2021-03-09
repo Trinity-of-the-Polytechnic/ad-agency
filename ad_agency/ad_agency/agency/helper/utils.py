@@ -24,3 +24,22 @@ if __name__ == '__main__':
     number = extract_employee_id(transleted)
 
     print(number)
+
+
+def russify_columns(target, to_russian):
+    def view_generator(key, value):
+        MAX_FIELD_LEN = 20
+
+        def column_view(obj):
+            field_value = str(getattr(obj, key))
+            if(len(field_value) > MAX_FIELD_LEN):
+                field_value = field_value[:MAX_FIELD_LEN] + '...'
+            return field_value
+
+        column_view.short_description = value
+        return column_view
+
+    for [key, value] in to_russian:
+        setattr(target, f'{key}_view', view_generator(key, value))
+
+    target.list_display = [*map(lambda item: f'{item[0]}_view', to_russian)]

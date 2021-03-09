@@ -1,30 +1,49 @@
 from django.contrib import admin
 from advanced_filters.admin import AdminAdvancedFiltersMixin
 
-from helper.utils import extract_employee_id
-
 from .models import Client, Company, Order
 from staff.models import Employee
 
+from helper.utils import extract_employee_id, russify_columns
 
 admin.site.site_header = 'Ad-agency'
 admin.site.site_title = 'Ad-agency'
 
 
 class CompanyAdmin(AdminAdvancedFiltersMixin, admin.ModelAdmin):
-    list_display = ['name', 'address', 'OGRN', 'INN', 'requisites', 'phone']
     ordering = ['name']
     advanced_filter_fields = ('name')
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['name', 'Название'], ['address', 'Адрес'], ['OGRN', 'ОГРН'],
+                      ['INN', 'ИНН'], ['requisites', 'Реквизиты'], ['phone', 'Телефон']]
+        russify_columns(self, to_russian)
+
 
 class ClientAdmin(admin.ModelAdmin):
-    list_display = ['last_name', 'first_name', 'patronymic', 'company', 'phone', 'email']
     ordering = ['last_name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['last_name', 'Фамилия'], ['first_name', 'Имя'], ['patronymic', 'Отчество'],
+                      ['company', 'Компания'], ['phone', 'Телефон'], ['email', 'Электронная почта']]
+        russify_columns(self, to_russian)
 
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['description', 'client', 'manager']
     ordering = ['client']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['manager', 'Менеджер'], ['client', 'Клиент'], ['description', 'Описание']]
+        russify_columns(self, to_russian)
 
     def get_queryset(self, request):
         if request.user.groups.filter(name='Account Manager').exists():

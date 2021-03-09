@@ -1,22 +1,19 @@
 from django.contrib import admin
 
-from helper.utils import extract_employee_id
-
 from .models import Document, DocumentType
 from projects.models import Project
 from staff.models import Employee
 
+from helper.utils import extract_employee_id, russify_columns
+
 
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ['number', 'creation_date', 'document_type', 'responsible',
-                    'client_order', 'project']
     ordering = ['number']
 
     def get_queryset(self, request):
         if request.user.groups.filter(name='Project Manager').exists():
             user_id = extract_employee_id(request.user.username)
-            return super().get_queryset(request).filter(project__in=Project.objects.filter(project_manager=
-                                                                                           Employee.objects.get
+            return super().get_queryset(request).filter(project__in=Project.objects.filter(project_manager=Employee.objects.get
                                                                                            (id=int(user_id))))
         else:
             return super().get_queryset(request)
@@ -34,10 +31,25 @@ class DocumentAdmin(admin.ModelAdmin):
             form.base_fields['project'].required = True
         return form
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['number', 'Номер'], ['creation_date', 'Дата создания'],
+                      ['document_type', 'Тип документа'], ['responsible', 'Отвественное лицо'],
+                      ['client_order', 'Заказ'], ['project', 'Проект']]
+        russify_columns(self, to_russian)
+
 
 class DocumentTypeAdmin(admin.ModelAdmin):
-    list_display = ['type_name']
     ordering = ['type_name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['type_name', 'Тип']]
+        russify_columns(self, to_russian)
 
 
 admin.site.register(Document, DocumentAdmin)

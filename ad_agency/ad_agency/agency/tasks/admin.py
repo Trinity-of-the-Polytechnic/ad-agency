@@ -1,15 +1,14 @@
 from django.contrib import admin
 
-from helper.utils import extract_employee_id
-
 from .models import Task, Status, Priority, EmployeeTask, ReportingTask
 from projects.models import Project
 from staff.models import Employee
 from documents.models import Document, DocumentType
 
+from helper.utils import extract_employee_id, russify_columns
+
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ['description', 'deadline', 'priority', 'project', 'status']
     ordering = ['project']
 
     def get_queryset(self, request):
@@ -28,27 +27,45 @@ class TaskAdmin(admin.ModelAdmin):
                 project_manager=Employee.objects.get(id=int(user_id)))
         return form
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['description', 'Описание'], ['deadline', 'Сроки'], ['priority', 'Приоритет'],
+                      ['project', 'Проект'], ['status', 'Статус']]
+        russify_columns(self, to_russian)
+
 
 class StatusAdmin(admin.ModelAdmin):
-    list_display = ['name']
     ordering = ['name']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['name', 'Наименование']]
+        russify_columns(self, to_russian)
 
 
 class PriorityAdmin(admin.ModelAdmin):
-    list_display = ['priority_level', 'priority_name']
     ordering = ['priority_level']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['priority_level', 'Уровень приоритета'], ['priority_name', 'Наименование приоритета']]
+        russify_columns(self, to_russian)
 
 
 class EmployeeTaskAdmin(admin.ModelAdmin):
-    list_display = ['task', 'employee']
     ordering = ['task']
 
     def get_queryset(self, request):
         if request.user.groups.filter(name='Project Manager').exists():
             user_id = extract_employee_id(request.user.username)
             return super().get_queryset(request).filter(
-                task__in=Task.objects.filter(project__in=
-                                             Project.objects.filter(project_manager=Employee.objects.get(id=int(user_id)))))
+                task__in=Task.objects.filter(project__in=Project.objects.filter(project_manager=Employee.objects.get(id=int(user_id)))))
         else:
             return super().get_queryset(request)
 
@@ -56,23 +73,27 @@ class EmployeeTaskAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         if request.user.groups.filter(name='Project Manager').exists():
             user_id = extract_employee_id(request.user.username)
-            form.base_fields['task'].queryset = Task.objects.filter(project__in=Project.objects.filter(project_manager=
-                                                                                                       Employee.objects.
+            form.base_fields['task'].queryset = Task.objects.filter(project__in=Project.objects.filter(project_manager=Employee.objects.
                                                                                                        get(id=int(
                                                                                                            user_id))))
         return form
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['task', 'Задача'], ['employee', 'Сотрудник']]
+        russify_columns(self, to_russian)
+
 
 class ReportingTaskAdmin(admin.ModelAdmin):
-    list_display = ['task', 'report']
     ordering = ['task']
 
     def get_queryset(self, request):
         if request.user.groups.filter(name='Project Manager').exists():
             user_id = extract_employee_id(request.user.username)
             return super().get_queryset(request).filter(
-                task__in=Task.objects.filter(project__in=Project.objects.filter(project_manager=
-                                                                                Employee.objects.get(id=int(user_id)))))
+                task__in=Task.objects.filter(project__in=Project.objects.filter(project_manager=Employee.objects.get(id=int(user_id)))))
         else:
             return super().get_queryset(request)
 
@@ -80,13 +101,19 @@ class ReportingTaskAdmin(admin.ModelAdmin):
         form = super().get_form(request, obj, **kwargs)
         if request.user.groups.filter(name='Project Manager').exists():
             user_id = extract_employee_id(request.user.username)
-            form.base_fields['task'].queryset = Task.objects.filter(project__in=Project.objects.filter(project_manager=
-                                                                                                       Employee.objects.
+            form.base_fields['task'].queryset = Task.objects.filter(project__in=Project.objects.filter(project_manager=Employee.objects.
                                                                                                        get(id=int(
                                                                                                            user_id))))
             form.base_fields['report'].queryset = Document.objects.filter(document_type=DocumentType.objects.get(
                 type_name='Отчет о проделанной работе')).filter(responsible=Employee.objects.get(id=int(user_id)))
         return form
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # short descriptions
+        to_russian = [['task', 'Задача'], ['report', 'Отчет']]
+        russify_columns(self, to_russian)
 
 
 admin.site.register(Task, TaskAdmin)
