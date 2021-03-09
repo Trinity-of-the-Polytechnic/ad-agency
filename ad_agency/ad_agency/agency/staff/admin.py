@@ -1,4 +1,7 @@
 from django.contrib import admin
+from django.conf.urls import url
+from django.http import HttpResponseRedirect
+from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
 
@@ -55,6 +58,26 @@ class EmployeeAdmin(admin.ModelAdmin):
 class PostAdmin(admin.ModelAdmin):
     list_display = ['name']
     ordering = ['name']
+    change_list_template = "admin/check_change_list.html"
+    view_mode = '0'
+    accessible_groups = ['Аккаунт-менеджер', 'Дизайнер', 'Креативный директор', 'Руководитель проектов']
+
+    def get_queryset(self, request):
+        if self.view_mode == '0':
+            return super().get_queryset(request)
+        elif self.view_mode == '1':
+            return super().get_queryset(request).filter(name__in=self.accessible_groups)
+        elif self.view_mode == '2':
+            return super().get_queryset(request).filter(~Q(name__in=self.accessible_groups))
+
+    def get_urls(self):
+        urls = super(PostAdmin, self).get_urls()
+        custom_urls = [url('^check/$', self.check_verification, name='check_verification')]
+        return custom_urls + urls
+
+    def check_verification(self, request):
+        self.view_mode = str(request)[-3]
+        return HttpResponseRedirect("../")
 
 
 admin.site.register(Employee, EmployeeAdmin)
