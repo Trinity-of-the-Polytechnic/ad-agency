@@ -148,6 +148,7 @@ STATIC_URL = '/static/'
 
 # hosts
 ALLOWED_HOSTS = [
-    '192.168.1.49',
-    '192.168.1.50',
+    f'192.168.1.{i}' for i in range(1, 255)
+] + [
+    '176.50.66.62',
 ]

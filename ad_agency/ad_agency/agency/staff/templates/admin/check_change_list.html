@@ -1,0 +1,16 @@
+{% extends 'admin/change_list.html' %}
+{% block object-tools %}
+  <form action="check/?f=0" method="POST" style="float: left; margin-right:10px">
+    {% csrf_token %}
+      <input type="submit" value="Все" />
+  </form>
+  <form action="check/?f=1" method="POST">
+    {% csrf_token %}
+      <input type="submit" value="Зарегистрированные" style="float: left; margin-right:10px"/>
+  </form>
+  <form action="check/?f=2" method="POST">
+    {% csrf_token %}
+      <input type="submit" value="Незарегистрированные" />
+  </form>
+    {{ block.super }}
+{% endblock %}
