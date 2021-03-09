@@ -51,8 +51,8 @@ class EmployeeTask(models.Model):
         return str(self.task) + ' ' + str(self.employee)
 
     class Meta:
-        verbose_name = 'Сотрудник'
-        verbose_name_plural = 'Сотрудники'
+        verbose_name = 'Задача сотрудника'
+        verbose_name_plural = 'Задачи сотрудника'
 
 
 class ReportingTask(models.Model):

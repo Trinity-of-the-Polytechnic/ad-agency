@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
 def russify_columns(target, to_russian):
     def view_generator(key, value):
-        MAX_FIELD_LEN = 20
+        MAX_FIELD_LEN = 30
 
         def column_view(obj):
             field_value = str(getattr(obj, key))
