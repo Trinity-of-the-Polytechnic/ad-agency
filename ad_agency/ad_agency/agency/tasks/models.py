@@ -36,7 +36,7 @@ class Task(models.Model):
     status = models.ForeignKey(Status, on_delete=models.CASCADE)
 
     def __str__(self):
-        return str(self.project)
+        return str(self.description)
 
     class Meta:
         verbose_name = 'Задача'

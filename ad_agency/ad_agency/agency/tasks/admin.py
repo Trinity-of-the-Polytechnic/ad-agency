@@ -16,6 +16,10 @@ class TaskAdmin(admin.ModelAdmin):
             user_id = extract_employee_id(request.user.username)
             return super().get_queryset(request).filter(
                 project__in=Project.objects.filter(project_manager=Employee.objects.get(id=int(user_id))))
+        elif request.user.groups.filter(name='Designer').exists():
+            user_id = extract_employee_id(request.user.username)
+            return super().get_queryset(request).filter(id__in=[obj.task.id for obj in EmployeeTask.objects.filter(
+                employee=Employee.objects.get(id=user_id))])
         else:
             return super().get_queryset(request)
 
@@ -25,6 +29,11 @@ class TaskAdmin(admin.ModelAdmin):
             user_id = extract_employee_id(request.user.username)
             form.base_fields['project'].queryset = Project.objects.filter(
                 project_manager=Employee.objects.get(id=int(user_id)))
+        elif request.user.groups.filter(name='Designer').exists():
+            form.base_fields['description'].disabled = True
+            form.base_fields['deadline'].disabled = True
+            form.base_fields['priority'].disabled = True
+            form.base_fields['project'].disabled = True
         return form
 
     def __init__(self, *args, **kwargs):
@@ -65,7 +74,11 @@ class EmployeeTaskAdmin(admin.ModelAdmin):
         if request.user.groups.filter(name='Project Manager').exists():
             user_id = extract_employee_id(request.user.username)
             return super().get_queryset(request).filter(
-                task__in=Task.objects.filter(project__in=Project.objects.filter(project_manager=Employee.objects.get(id=int(user_id)))))
+                task__in=Task.objects.filter(project__in=Project.objects.filter(project_manager=
+                                                                                Employee.objects.get(id=int(user_id)))))
+        elif request.user.groups.filter(name='Designer').exists():
+            user_id = extract_employee_id(request.user.username)
+            return super().get_queryset(request).filter(employee=Employee.objects.get(id=int(user_id)))
         else:
             return super().get_queryset(request)
 
