@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.conf.urls import url
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseBadRequest
 from django.db.models import Q
 from django.contrib.auth.models import User
 from django.contrib.auth.models import Group
+from django.core.exceptions import SuspiciousOperation
 
 from transliterate import translit
 
@@ -13,15 +14,21 @@ from helper.utils import translit, russify_columns
 
 class EmployeeAdmin(admin.ModelAdmin):
     ordering = ['last_name']
-    actions = ['migrate_employees_to_users']
+    actions = ['delete_selected', 'migrate_employees_to_users']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-
         # short descriptions
         to_russian = [['last_name', 'Фамилия'], ['first_name', 'Имя'], ['patronymic', 'Отчество'],
                       ['birthdate', 'Дата рождения'], ['post', 'Должность']]
         russify_columns(self, to_russian)
+
+    def get_actions(self, request):
+        actions = super(EmployeeAdmin, self).get_actions(request)
+        if not request.user.is_superuser:
+            if 'migrate_employees_to_users' in actions:
+                del actions['migrate_employees_to_users']
+        return actions
 
     def delete_model(self, request, obj):
         self.delete_related_user(request, obj)
@@ -55,7 +62,8 @@ class EmployeeAdmin(admin.ModelAdmin):
                 elif obj.post.name == 'Руководитель проектов':
                     group = 'Project Manager'
                 else:
-                    raise Exception('Unregistered post in the system. contact your administrator')
+                    return HttpResponseBadRequest(f'Unregistered post in the system. Check post "{obj.post}" and '
+                                                  f'employee "{obj.first_name} {obj.last_name}"')
                 User.objects.create_user(username=nick_name, password='qwerty', is_staff=True,
                                          first_name=obj.first_name, last_name=obj.last_name)
                 Group.objects.get(name=group).user_set.add(User.objects.get(username=nick_name))
