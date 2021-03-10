@@ -76,9 +76,6 @@ class EmployeeTaskAdmin(admin.ModelAdmin):
             return super().get_queryset(request).filter(
                 task__in=Task.objects.filter(project__in=Project.objects.filter(project_manager=
                                                                                 Employee.objects.get(id=int(user_id)))))
-        elif request.user.groups.filter(name='Designer').exists():
-            user_id = extract_employee_id(request.user.username)
-            return super().get_queryset(request).filter(employee=Employee.objects.get(id=int(user_id)))
         else:
             return super().get_queryset(request)
 
