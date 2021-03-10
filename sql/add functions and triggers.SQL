@@ -354,7 +354,10 @@ begin
             (select "name" from Staff_Post where "post_id" = cur_post_id);
     end if;
     
-    new."creation_date" := current_date;
+    if new."creation_date" is null then
+        new."creation_date" := current_date;
+    end if;
+    
     return new;
 end;
 $$ language plpgsql;
